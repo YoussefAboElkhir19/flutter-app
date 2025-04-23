@@ -16,8 +16,9 @@ class _ProfilePageState extends State<ProfilePage> {
   // create variable to store image as File
   File? selectedImage;
 
-  ImagePicker imagePicker = ImagePicker();
   // create an instance of image picker
+  ImagePicker imagePicker = ImagePicker();
+  // Function to select a image
   Future<void> imageSelector(ImageSource source) async {
     // select image and  store image in variable
     XFile? image = await imagePicker.pickImage(source: source);

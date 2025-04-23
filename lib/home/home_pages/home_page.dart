@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/first_screen.dart';
 import 'package:flutter_application_1/home/profile/profile_page.dart';
@@ -10,7 +12,8 @@ class MyHomePage extends StatelessWidget {
   // ? means that the value can be null
   final String? title;
   final String? body;
-  const MyHomePage({this.title, this.body, super.key});
+  final List<File>? image;
+  const MyHomePage({this.image, this.title, this.body, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,14 @@ class MyHomePage extends StatelessWidget {
 
       body: Column(
         children: [
-          Image.asset("assets/cat1.jpg"),
+          image == null || image!.isEmpty
+              ? Image.asset("assets/cat1.jpg")
+              : Image.file(
+                image![0],
+                height: 100,
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -51,13 +61,34 @@ class MyHomePage extends StatelessWidget {
               body ?? "This is My Bodyyyy",
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              MyPhotos(url: "assets/about1.jpg", text: "About1"),
-              MyPhotos(url: "assets/about1.jpg", text: "About2"),
-            ],
-          ),
+          image == null || image!.isEmpty
+              ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  MyPhotos(url: "assets/about1.jpg", text: "About1"),
+                  MyPhotos(url: "assets/about1.jpg", text: "About2"),
+                ],
+              )
+              : SizedBox(
+                height: 500,
+                child: GridView.builder(
+                  // lenth of the list
+                  itemCount: image!.length,
+                  // to return the list of images
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.file(image![index], height: 100, width: 100),
+                    );
+                  },
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
+                    childAspectRatio: 1,
+                  ),
+                ),
+              ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
